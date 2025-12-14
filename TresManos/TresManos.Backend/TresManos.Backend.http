@@ -1,0 +1,6 @@
+@TresManos.Backend_HostAddress = http://localhost:5168
+
+GET {{TresManos.Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
