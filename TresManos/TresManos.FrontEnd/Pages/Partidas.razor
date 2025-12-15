@@ -1,0 +1,201 @@
+﻿@*
+    Página que muestra el historial completo de todas las partidas jugadas.
+    Ruta: /partidas
+*@
+@page "/partidas"
+@inherits PartidasBase
+
+<PageTitle>Historial de Partidas - Tres Manos</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+    <MudPaper Elevation="3" Class="pa-6">
+
+        @* ---------- CABECERA ---------- *@
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.History" Class="mr-2" />
+            Historial de Partidas
+        </MudText>
+
+        @* ---------- BARRA DE ACCIONES ---------- *@
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+
+            @* Botón para volver al inicio *@
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Home"
+                       Href="/">
+                Volver al Inicio
+            </MudButton>
+
+            @* Botón para recargar la lista *@
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Refresh"
+                       OnClick="@CargarPartidas"
+                       Disabled="@IsLoading">
+                Actualizar
+            </MudButton>
+        </MudStack>
+
+        @* ---------- ESTADO DE CARGA ---------- *@
+        @if (IsLoading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-4" />
+            <MudText Align="Align.Center" Class="mt-4">Cargando partidas...</MudText>
+        }
+        @* ---------- LISTA VACÍA ---------- *@
+        else if (!Partidas.Any())
+        {
+            <MudAlert Severity="Severity.Info" Class="mt-4">
+                No hay partidas registradas. ¡Comienza una nueva partida!
+            </MudAlert>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Success"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Href="/registrar-jugadores"
+                       Class="mt-4"
+                       FullWidth="true">
+                Registrar Jugadores y Comenzar
+            </MudButton>
+        }
+        @* ---------- TABLA DE PARTIDAS ---------- *@
+        else
+        {
+            <MudTable Items="@Partidas"
+                      Hover="true"
+                      Striped="true"
+                      Dense="false"
+                      Elevation="2"
+                      Class="mt-4">
+
+                @* Encabezados de la tabla *@
+                <HeaderContent>
+                    <MudTh>ID</MudTh>
+                    <MudTh>Jugador 1</MudTh>
+                    <MudTh>Jugador 2</MudTh>
+                    <MudTh>Estado</MudTh>
+                    <MudTh>Ganador</MudTh>
+                    <MudTh>Fecha Inicio</MudTh>
+                    <MudTh>Acciones</MudTh>
+                </HeaderContent>
+
+                @* Filas de la tabla *@
+                <RowTemplate>
+                    @* ID de la partida *@
+                    <MudTd DataLabel="ID">
+                        <MudChip T="string" Size="Size.Small" Color="Color.Default">
+                            #@context.PartidaId
+                        </MudChip>
+                    </MudTd>
+
+                    @* Nombre del Jugador 1 *@
+                    <MudTd DataLabel="Jugador 1">
+                        <MudText Typo="Typo.body2">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Class="mr-1" />
+                            @context.NombreJugador1
+                        </MudText>
+                    </MudTd>
+
+                    @* Nombre del Jugador 2 *@
+                    <MudTd DataLabel="Jugador 2">
+                        <MudText Typo="Typo.body2">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Class="mr-1" />
+                            @context.NombreJugador2
+                        </MudText>
+                    </MudTd>
+
+                    @* Estado de la partida con chip de color *@
+                    <MudTd DataLabel="Estado">
+                        @if (context.Estado == "FINALIZADA")
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Success" Icon="@Icons.Material.Filled.CheckCircle">
+                                Finalizada
+                            </MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Info" Icon="@Icons.Material.Filled.PlayArrow">
+                                En Curso
+                            </MudChip>
+                        }
+                    </MudTd>
+
+                    @* Ganador de la partida *@
+                    <MudTd DataLabel="Ganador">
+                        @if (context.Estado == "FINALIZADA")
+                        {
+                            <MudText Typo="Typo.body2">
+                                <MudIcon Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small" Color="Color.Warning" Class="mr-1" />
+                                @(context.NombreGanador ?? "Empate")
+                            </MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">-</MudText>
+                        }
+                    </MudTd>
+
+                    @* Fecha de inicio *@
+                    <MudTd DataLabel="Fecha Inicio">
+                        <MudText Typo="Typo.body2">
+                            @context.FechaInicio.ToString("dd/MM/yyyy HH:mm")
+                        </MudText>
+                    </MudTd>
+
+                    @* Botones de acción *@
+                    <MudTd DataLabel="Acciones">
+                        <MudStack Row="true" Spacing="2">
+                            @* Botón Ver Detalles (solo para partidas finalizadas) *@
+                            @if (context.Estado == "FINALIZADA")
+                            {
+                                <MudButton Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.Visibility"
+                                           OnClick="@(() => VerDetalles(context.PartidaId))">
+                                    Ver Detalles
+                                </MudButton>
+                            }
+                            @* Botón Continuar Jugando (solo para partidas en curso) *@
+                            else
+                            {
+                                <MudButton Variant="Variant.Filled"
+                                           Color="Color.Success"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.PlayArrow"
+                                           OnClick="@(() => ContinuarJugando(context.PartidaId))">
+                                    Continuar
+                                </MudButton>
+                            }
+                        </MudStack>
+                    </MudTd>
+                </RowTemplate>
+
+            </MudTable>
+
+            @* Resumen de estadísticas *@
+            <MudPaper Elevation="2" Class="pa-4 mt-4">
+                <MudText Typo="Typo.h6" Class="mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Small" Class="mr-1" />
+                    Estadísticas Generales
+                </MudText>
+                <MudGrid>
+                    <MudItem xs="12" sm="4">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Total de partidas:</MudText>
+                        <MudText Typo="Typo.h6">@Partidas.Count</MudText>
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Finalizadas:</MudText>
+                        <MudText Typo="Typo.h6">@PartidasFinalizadas</MudText>
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">En curso:</MudText>
+                        <MudText Typo="Typo.h6">@PartidasEnCurso</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
+
+    </MudPaper>
+</MudContainer>
