@@ -12,6 +12,19 @@ namespace TresManos.Backend.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<RondasController> _logger;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del controlador <see cref="RondasController"/>.
+        /// </summary>
+        /// <param name="unitOfWork">
+        /// Implementación del patrón <c>Unit of Work</c> que permite coordinar
+        /// el acceso a los repositorios y administrar las transacciones de datos
+        /// durante el ciclo de vida de una solicitud HTTP.
+        /// </param>
+        /// <param name="logger">
+        /// Servicio de registro de logs tipado para <see cref="RondasController"/>,
+        /// utilizado para registrar información, advertencias y errores generados
+        /// durante la ejecución de las acciones del controlador.
+        /// </param>
         public RondasController(IUnitOfWork unitOfWork, ILogger<RondasController> logger)
         {
             _unitOfWork = unitOfWork;
