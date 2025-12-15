@@ -1,0 +1,132 @@
+﻿@page "/"
+@inherits IndexBase
+
+<PageTitle>Inicio - Tres Manos</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-8">
+        <MudStack Spacing="4" AlignItems="AlignItems.Center">
+
+            <!-- Título principal -->
+            <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary">
+                🪨 📄 ✂️
+            </MudText>
+            <MudText Typo="Typo.h2" Align="Align.Center" GutterBottom="true">
+                Piedra, Papel o Tijera
+            </MudText>
+            <MudText Typo="Typo.h6" Align="Align.Center" Color="Color.Secondary">
+                Bienvenido al juego clásico de Tres Manos
+            </MudText>
+
+            <MudDivider Class="my-4" Style="width: 100%;" />
+
+            <!-- Opciones del menú -->
+            <MudGrid Justify="Justify.Center" Spacing="4">
+
+                <!-- Registrar jugadores -->
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Elevation="2" Class="pa-4 hover-card">
+                        <MudCardContent Class="text-center">
+                            <MudIcon Icon="@Icons.Material.Filled.PersonAdd"
+                                     Size="Size.Large"
+                                     Color="Color.Primary"
+                                     Class="mb-3" />
+                            <MudText Typo="Typo.h6" GutterBottom="true">
+                                Registrar jugadores
+                            </MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Crea o selecciona los jugadores para comenzar
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions Class="justify-center">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Href="/registro-jugadores">
+                                Ir
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+                <!-- Nueva partida -->
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Elevation="2" Class="pa-4 hover-card">
+                        <MudCardContent Class="text-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Gamepad"
+                                     Size="Size.Large"
+                                     Color="Color.Success"
+                                     Class="mb-3" />
+                            <MudText Typo="Typo.h6" GutterBottom="true">
+                                Nueva partida
+                            </MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Inicia una nueva batalla entre dos jugadores
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions Class="justify-center">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Success"
+                                       FullWidth="true"
+                                       Href="/nueva-partida">
+                                Ir
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+                <!-- Historial -->
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Elevation="2" Class="pa-4 hover-card">
+                        <MudCardContent Class="text-center">
+                            <MudIcon Icon="@Icons.Material.Filled.History"
+                                     Size="Size.Large"
+                                     Color="Color.Info"
+                                     Class="mb-3" />
+                            <MudText Typo="Typo.h6" GutterBottom="true">
+                                Historial de partidas
+                            </MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Consulta todas las partidas jugadas
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions Class="justify-center">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Info"
+                                       FullWidth="true"
+                                       Href="/historial">
+                                Ir
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+            </MudGrid>
+
+            <MudDivider Class="my-4" Style="width: 100%;" />
+
+            <!-- Información adicional -->
+            <MudText Typo="Typo.body1" Align="Align.Center" Class="mt-4">
+                <strong>Reglas del juego:</strong>
+            </MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary">
+                🪨 Piedra vence a Tijeras | 📄 Papel vence a Piedra | ✂️ Tijeras vence a Papel
+            </MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary">
+                El primero en ganar <strong>2 rondas</strong> gana la partida
+            </MudText>
+
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+</style>

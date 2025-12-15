@@ -1,0 +1,61 @@
+﻿@page "/registro-jugadores"
+@inherits RegistroJugadoresBase
+
+<PageTitle>Registrar Jugadores - Tres Manos</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-6">
+
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">
+            <MudIcon Icon="@Icons.Material.Filled.PersonAdd" /> Registrar Jugadores
+        </MudText>
+
+        <MudDivider Class="my-4" />
+
+        <MudStack Spacing="4">
+
+            <MudTextField T="string"
+                          Label="Nombre del Jugador 1"
+                          @bind-Value="Jugador1Nombre"
+                          Variant="Variant.Outlined"
+                          Placeholder="Ingrese el nombre del Jugador 1"
+                          FullWidth="true"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="Nombre del Jugador 2"
+                          @bind-Value="Jugador2Nombre"
+                          Variant="Variant.Outlined"
+                          Placeholder="Ingrese el nombre del Jugador 2"
+                          FullWidth="true"
+                          Immediate="true" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       OnClick="OnValidSubmit"
+                       Disabled="IsSubmitting"
+                       StartIcon="@Icons.Material.Filled.PlayArrow">
+                @if (IsSubmitting)
+                {
+                    <MudProgressCircular Size="Size.Small" Class="mr-2" Indeterminate="true" />
+                    <span>Creando usuarios, partida y primera ronda...</span>
+                }
+                else
+                {
+                    <span>Comenzar Juego</span>
+                }
+            </MudButton>
+
+            @if (!string.IsNullOrWhiteSpace(Mensaje))
+            {
+                <MudAlert Severity="@ColorToSeverity(MensajeColor)" Class="mt-2">
+                    @Mensaje
+                </MudAlert>
+            }
+
+        </MudStack>
+
+    </MudPaper>
+</MudContainer>

@@ -1,0 +1,317 @@
+﻿@* 
+    Ruta de la página. 
+    {PartidaId:int} indica que recibimos un parámetro entero desde la URL, por ejemplo:
+    /partida/5/detalles
+*@
+@page "/partida/{PartidaId:int}/detalles"
+
+@* 
+    Indicamos que este componente hereda de la clase base DetallesPartidaBase
+    donde está toda la lógica (code-behind).
+*@
+@inherits DetallesPartidaBase
+
+@* 
+    Título que se muestra en la pestaña del navegador.
+*@
+<PageTitle>Detalles de la Partida - Tres Manos</PageTitle>
+
+@* 
+    Contenedor principal centrado con ancho máximo medio.
+*@
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+
+    @* Tarjeta principal que contiene toda la información de la partida *@
+    <MudPaper Elevation="3" Class="pa-6">
+
+        @* ---------- CABECERA / TÍTULO ---------- *@
+
+        @* Título grande centrado con icono de control (gamepad). *@
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.SportsEsports" Class="mr-2" />
+            Piedra, Papel o Tijera
+        </MudText>
+
+        @* ---------- ESTADOS DE CARGA / ERROR / CONTENIDO ---------- *@
+
+        @* 
+            Si todavía estamos cargando los datos (IsLoading == true),
+            mostramos un indicador de progreso y un mensaje.
+        *@
+        @if (IsLoading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-4" />
+            <MudText Align="Align.Center" Class="mt-2">
+                Cargando detalles de la partida...
+            </MudText>
+        }
+        @* 
+            Si dejó de cargar pero Partida es null, significa que hubo un problema
+            al obtener los datos desde el backend.
+        *@
+        else if (Partida is null)
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">
+                No se pudo cargar la información de la partida.
+            </MudAlert>
+
+            @* Botón para volver a la lista de partidas *@
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.ArrowBack"
+                       OnClick="@VolverAPartidas">
+                Volver a Partidas
+            </MudButton>
+        }
+        @* 
+            Si tenemos datos de la partida (Partida != null), mostramos todo el detalle.
+        *@
+        else
+        {
+            @* ---------- AVISO DE PARTIDA FINALIZADA ---------- *@
+
+            @* 
+                Si el estado de la partida es FINALIZADA, mostramos un aviso en verde
+                con el nombre del ganador (o "Empate" si viene null).
+            *@
+            @if (Partida.Estado == "FINALIZADA")
+            {
+                <MudAlert Severity="Severity.Success"
+                          Icon="@Icons.Material.Filled.CheckCircle"
+                          Class="mb-4">
+                    <MudText Typo="Typo.h6" Class="mb-1">¡Partida finalizada!</MudText>
+                    <MudText Typo="Typo.body1">
+                        <strong>Ganador:</strong> @(Partida.NombreGanador ?? "Empate")
+                    </MudText>
+                </MudAlert>
+            }
+
+        @* ---------- TARJETAS DE JUGADORES ---------- *@
+
+        @* Grid con dos columnas: información de Jugador 1 y Jugador 2 *@
+        <MudGrid Class="mb-4">
+
+            @* Columna Jugador 1 *@
+            <MudItem xs="12" md="6">
+                <MudPaper Elevation="2" Class="pa-4">
+                    <MudText Typo="Typo.h6" Color="Color.Primary" Class="mb-1">
+                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Class="mr-1" />
+                        Jugador 1
+                    </MudText>
+                    <MudText Typo="Typo.body1">
+                        <strong>@Partida.NombreJugador1</strong>
+                    </MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
+                        Rondas ganadas: <strong>@RondasGanadasJugador1</strong>
+                    </MudText>
+                </MudPaper>
+            </MudItem>
+
+            @* Columna Jugador 2 *@
+            <MudItem xs="12" md="6">
+                <MudPaper Elevation="2" Class="pa-4">
+                    <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mb-1">
+                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Class="mr-1" />
+                        Jugador 2
+                    </MudText>
+                    <MudText Typo="Typo.body1">
+                        <strong>@Partida.NombreJugador2</strong>
+                    </MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
+                        Rondas ganadas: <strong>@RondasGanadasJugador2</strong>
+                    </MudText>
+                </MudPaper>
+            </MudItem>
+
+        </MudGrid>
+
+        @* ---------- INFORMACIÓN GENERAL DE LA PARTIDA ---------- *@
+
+        <MudPaper Elevation="2" Class="pa-4 mb-4">
+            <MudText Typo="Typo.h6" Class="mb-3">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-1" />
+                Información de la Partida
+            </MudText>
+
+            @* Grid con cuatro datos: inicio, fin, total rondas, empates *@
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Fecha de inicio:
+                    </MudText>
+                    <MudText Typo="Typo.body1">
+                        @Partida.FechaInicio.ToString("dd/MM/yyyy HH:mm")
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Fecha de finalización:
+                    </MudText>
+                    <MudText Typo="Typo.body1">
+                        @(Partida.FechaFin.HasValue
+                                                ? Partida.FechaFin.Value.ToString("dd/MM/yyyy HH:mm")
+                                                : "En curso")
+                    </MudText>
+                </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Total de rondas:
+                        </MudText>
+                        <MudText Typo="Typo.body1">
+                            @Rondas.Count
+                        </MudText>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Empates:
+                        </MudText>
+                        <MudText Typo="Typo.body1">
+                            @RondasEmpatadas
+                        </MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+
+            @* ---------- HISTORIAL DE RONDAS ---------- *@
+
+            <MudText Typo="Typo.h6" Class="mb-3">
+                <MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Small" Class="mr-1" />
+                Historial de Rondas
+            </MudText>
+
+            @* 
+                Si hay rondas jugadas, mostramos la tabla;
+                si no hay, mostramos un mensaje informativo.
+            *@
+        @if (Rondas.Any())
+            {
+                @* Tabla con la lista de rondas *@
+                <MudTable Items="@Rondas"
+                          Hover="true"
+                          Striped="true"
+                          Dense="true"
+                          Elevation="2">
+
+                    @* Encabezados de la tabla *@
+                    <HeaderContent>
+                        <MudTh>Ronda</MudTh>
+                        <MudTh>@Partida.NombreJugador1</MudTh>
+                        <MudTh>@Partida.NombreJugador2</MudTh>
+                        <MudTh>Resultado</MudTh>
+                    </HeaderContent>
+
+                    @* Fila de cada ronda *@
+                    <RowTemplate>
+                        @* Número de la ronda con un chip *@
+                        <MudTd DataLabel="Ronda">
+                            <MudChip T="string" Size="Size.Small" Color="Color.Default">
+                                #@context.NumeroRonda
+                            </MudChip>
+                        </MudTd>
+
+                        @* Movimiento del jugador 1 con color e icono *@
+                        <MudTd DataLabel="@Partida.NombreJugador1">
+                            <MudChip T="string"
+                                     Size="Size.Small"
+                                     Color="@ObtenerColorMovimiento(context.MovimientoJugador1)"
+                                     Icon="@ObtenerIconoMovimiento(context.MovimientoJugador1)">
+                                @ObtenerNombreMovimiento(context.MovimientoJugador1)
+                            </MudChip>
+                        </MudTd>
+
+                        @* Movimiento del jugador 2 con color e icono *@
+                        <MudTd DataLabel="@Partida.NombreJugador2">
+                            <MudChip T="string"
+                                     Size="Size.Small"
+                                     Color="@ObtenerColorMovimiento(context.MovimientoJugador2)"
+                                     Icon="@ObtenerIconoMovimiento(context.MovimientoJugador2)">
+                                @ObtenerNombreMovimiento(context.MovimientoJugador2)
+                            </MudChip>
+                        </MudTd>
+
+                        @* Resultado de la ronda (empate, gana J1 o gana J2) *@
+                        <MudTd DataLabel="Resultado">
+                            @if (context.Resultado == "E")
+                            {
+                                <MudChip T="string"
+                                         Size="Size.Small"
+                                         Color="Color.Warning"
+                                         Icon="@Icons.Material.Filled.RemoveCircle">
+                                    Empate
+                                </MudChip>
+                            }
+                            else if (context.Resultado == "1")
+                            {
+                                <MudChip T="string"
+                                         Size="Size.Small"
+                                         Color="Color.Success"
+                                         Icon="@Icons.Material.Filled.EmojiEvents">
+                                    @Partida.NombreJugador1
+                                </MudChip>
+                            }
+                            else
+                            {
+                                <MudChip T="string"
+                                         Size="Size.Small"
+                                         Color="Color.Success"
+                                         Icon="@Icons.Material.Filled.EmojiEvents">
+                                    @Partida.NombreJugador2
+                                </MudChip>
+                            }
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
+            else
+            {
+                @* Mensaje cuando no hay rondas registradas *@
+                <MudAlert Severity="Severity.Info">
+                    No se han jugado rondas en esta partida.
+                </MudAlert>
+            }
+
+            @* ---------- BOTONES INFERIORES (VOLVER / REVANCHA) ---------- *@
+
+            <MudGrid Class="mt-4">
+
+                @* Botón para regresar a la lista de partidas *@
+                <MudItem xs="12" md="6">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.ArrowBack"
+                               FullWidth="true"
+                               OnClick="@VolverAPartidas">
+                        Volver a Partidas
+                    </MudButton>
+                </MudItem>
+
+                @* Botón para crear y jugar una revancha con los mismos jugadores *@
+                <MudItem xs="12" md="6">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Secondary"
+                               StartIcon="@Icons.Material.Filled.Replay"
+                               FullWidth="true"
+                               Disabled="@BotonRevanchaDeshabilitado"
+                               OnClick="@IniciarRevancha">
+                        @* Si está cargando, mostramos spinner y texto de progreso *@
+                        @if (IsRevanchaLoading)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                            <span>Creando revancha...</span>
+                        }
+                        @* Si no está cargando, texto normal del botón *@
+                        else
+                        {
+                            <span>Jugar revancha</span>
+                        }
+                    </MudButton>
+                </MudItem>
+
+            </MudGrid>
+        }
+
+    </MudPaper>
+</MudContainer>

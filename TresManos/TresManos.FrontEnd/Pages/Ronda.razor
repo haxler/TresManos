@@ -1,0 +1,111 @@
+﻿@page "/ronda"
+@inherits RondaBase
+
+<PageTitle>Ronda - Piedra, Papel o Tijera</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-6">
+
+        <!-- Título de la ronda -->
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">
+            Ronda @NumeroRonda
+        </MudText>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Jugador 1 -->
+        <MudStack Spacing="3" Class="mb-6">
+            <MudText Typo="Typo.h6" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Person" /> Jugador 1
+            </MudText>
+
+            <MudSelect @bind-Value="MovimientoJ1"
+                       Label="Seleccione movimiento"
+                       Variant="Variant.Outlined"
+                       FullWidth="true"
+                       Required="true">
+                <MudSelectItem Value="@("")">-- Seleccione --</MudSelectItem>
+                <MudSelectItem Value="@("Piedra")">🪨 Piedra</MudSelectItem>
+                <MudSelectItem Value="@("Papel")">📄 Papel</MudSelectItem>
+                <MudSelectItem Value="@("Tijera")">✂️ Tijera</MudSelectItem>
+            </MudSelect>
+        </MudStack>
+
+        <!-- Jugador 2 -->
+        <MudStack Spacing="3" Class="mb-6">
+            <MudText Typo="Typo.h6" Color="Color.Secondary">
+                <MudIcon Icon="@Icons.Material.Filled.Person" /> Jugador 2
+            </MudText>
+
+            <MudSelect @bind-Value="MovimientoJ2"
+                       Label="Seleccione movimiento"
+                       Variant="Variant.Outlined"
+                       FullWidth="true"
+                       Required="true">
+                <MudSelectItem Value="@("")">-- Seleccione --</MudSelectItem>
+                <MudSelectItem Value="@("Piedra")">🪨 Piedra</MudSelectItem>
+                <MudSelectItem Value="@("Papel")">📄 Papel</MudSelectItem>
+                <MudSelectItem Value="@("Tijera")">✂️ Tijera</MudSelectItem>
+            </MudSelect>
+        </MudStack>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Botón OK -->
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   FullWidth="true"
+                   Size="Size.Large"
+                   OnClick="JugarRonda"
+                   Disabled="@IsSubmitting">
+            @if (IsSubmitting)
+            {
+                <MudProgressCircular Size="Size.Small" Class="mr-2" Indeterminate="true" />
+                <span>Procesando...</span>
+            }
+            else
+            {
+                <span>Ok</span>
+            }
+        </MudButton>
+
+        <!-- Mensaje de resultado -->
+        @if (!string.IsNullOrWhiteSpace(Mensaje))
+        {
+            <MudAlert Severity="@MensajeSeverity" Class="mt-4">
+                @Mensaje
+            </MudAlert>
+        }
+
+        <!-- Resultado visual (opcional) -->
+        @if (MostrarResultado)
+        {
+            <MudPaper Elevation="2" Class="pa-4 mt-4" Style="background-color: #f5f5f5;">
+                <MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">
+                    Resultado de la Ronda
+                </MudText>
+                <MudGrid Justify="Justify.Center" Spacing="2">
+                    <MudItem xs="6" Class="text-center">
+                        <MudText Typo="Typo.body1" Color="Color.Primary">
+                            <strong>Jugador 1:</strong>
+                        </MudText>
+                        <MudText Typo="Typo.h5">@ObtenerEmoji(MovimientoJ1)</MudText>
+                        <MudText Typo="Typo.body2">@MovimientoJ1</MudText>
+                    </MudItem>
+                    <MudItem xs="6" Class="text-center">
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            <strong>Jugador 2:</strong>
+                        </MudText>
+                        <MudText Typo="Typo.h5">@ObtenerEmoji(MovimientoJ2)</MudText>
+                        <MudText Typo="Typo.body2">@MovimientoJ2</MudText>
+                    </MudItem>
+                </MudGrid>
+                <MudDivider Class="my-3" />
+                <MudText Typo="Typo.h6" Align="Align.Center" Color="@ColorResultado">
+                    @TextoResultado
+                </MudText>
+            </MudPaper>
+        }
+
+    </MudPaper>
+</MudContainer>

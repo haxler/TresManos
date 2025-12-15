@@ -1,0 +1,66 @@
+﻿@page "/ganador"
+@page "/ganador/{GanadorNombre}"
+@inherits GanadorBase
+
+<PageTitle>¡Tenemos un Ganador! - Tres Manos</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-8" Style="min-height: 400px;">
+
+        <MudStack Spacing="4" AlignItems="AlignItems.Center">
+
+            <!-- Título principal -->
+            <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
+                ¡Tenemos un Ganador!!
+            </MudText>
+
+            <MudIcon Icon="@Icons.Material.Filled.EmojiEvents"
+                     Color="Color.Warning"
+                     Style="font-size: 5rem;" />
+
+            <!-- Mensaje del ganador -->
+            <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary" Class="mt-4">
+                El Jugador <strong>@NombreGanador</strong> es el nuevo campeón!!
+            </MudText>
+
+            <MudDivider Class="my-4" Style="width: 100%;" />
+
+            <!-- Botones de acción -->
+            <MudStack Row="true" Spacing="3" Justify="Justify.Center" Class="mt-4">
+
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           OnClick="Revancha">
+                    Revancha
+                </MudButton>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           OnClick="NuevoJuego">
+                    Nuevo Juego
+                </MudButton>
+
+            </MudStack>
+
+        </MudStack>
+
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .mud-icon {
+        animation: bounce 1s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+</style>
